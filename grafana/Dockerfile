@@ -14,6 +14,5 @@ EXPOSE 3000
 
 COPY ./run.sh /run.sh
 
-USER grafana
 WORKDIR /
 ENTRYPOINT [ "/run.sh" ]
