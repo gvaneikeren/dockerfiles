@@ -1,5 +1,5 @@
 ARG RELEASE=stretch
-FROM arm32v6/debian:${RELEASE}-slim
+FROM debian:stretch
 
 ARG GF_UID="472"
 ARG GF_GID="472"
