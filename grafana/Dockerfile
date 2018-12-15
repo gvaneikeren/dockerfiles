@@ -15,4 +15,4 @@ EXPOSE 3000
 COPY ./run.sh /run.sh
 
 WORKDIR /
-CMD [ "exec grafana-server" ]
+CMD [ "grafana-server" ]
