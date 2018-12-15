@@ -1,4 +1,6 @@
-FROM debian:stretch
+FROM resin/rpi-raspbian:stretch
+MAINTAINER Gert van Eikeren <gvaneikeren@gmail.com>
+
 
 RUN sudo apt-get install apt-transport-https curl \
     curl https://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add - \
