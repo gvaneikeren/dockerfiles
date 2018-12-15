@@ -1,2 +1,2 @@
 #!/bin/bash -e
-sudo service grafana-server start
+exec grafana-server 
