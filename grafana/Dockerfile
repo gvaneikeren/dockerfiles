@@ -24,4 +24,4 @@ EXPOSE 3000
 COPY ./run.sh /run.sh
 
 WORKDIR /
-CMD [ "grafana-server" ]
+CMD [ "grafana-server", "--homepath=/usr/share/grafana" , "--config=/etc/grafana/grafana.ini"]
