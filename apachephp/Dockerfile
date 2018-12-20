@@ -1,5 +1,5 @@
-FROM  armbuild/debian:8.0
-MAINTAINER Fernando Mayo <fernando@tutum.co>
+FROM resin/rpi-raspbian:stretch
+MAINTAINER me
 
 # Install base packages
 RUN apt-get update && \
