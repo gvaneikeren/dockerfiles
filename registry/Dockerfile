@@ -1,10 +1,11 @@
 # Compile of registry binaries
-FROM arm32v7/golang as builder
+FROM resin/rpi-raspbian:stretch as builder
 
 ENV DISTRIBUTION_DIR /go/src/github.com/docker/distribution
 ENV DOCKER_BUILDTAGS include_oss include_gcs
 
-RUN apt-get update && apt-get install --assume-yes make git
+RUN apt-get update && \
+    apt-get install --assume-yes make git
 
 ARG VERSION=master
 RUN git clone -b $VERSION https://github.com/docker/distribution.git $DISTRIBUTION_DIR
