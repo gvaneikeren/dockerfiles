@@ -17,7 +17,7 @@ RUN make PREFIX=/go clean binaries
 
 
 # Build a minimal distribution container
-FROM arm32v7/debian:jessie
+FROM resin/rpi-raspbian:stretch
 
 RUN apt-get update && \
     apt-get install -y ca-certificates librados2 apache2-utils && \
