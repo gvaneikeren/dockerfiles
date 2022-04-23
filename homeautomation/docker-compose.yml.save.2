@@ -1,0 +1,170 @@
+version: '3.5'
+services:
+    ha-mariadb:
+        container_name: 'ha-mariadb'
+        hostname: 'ha-mariadb'
+        volumes:
+            - '/home/gert/ha-mariadb:/var/lib/mysql'
+        environment:
+            - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+        networks:
+            - 'mariadb-be'
+        image: 'mariadb:${HAMARIADB_VERSION}'
+        restart: 'always'
+    bitwarden:
+        container_name: 'bitwarden'
+        hostname: 'bitwarden'
+        networks:
+            - 'bitwarden-fe'
+        volumes:
+            - '/home/gert/bitwarden/:/data/'
+        environment:
+            - ROCKET_TLS={certs="/data/ssl/bitwarden.crt",key="/data/ssl/bitwarden.key"}
+        ports:
+            - '7277:80'
+        image: 'bitwardenrs/server:${BITWARDEN_VERSION}'
+        restart: 'always'
+    home-assistant:
+        container_name: home-assistant
+        volumes:
+            - '/home/gert/ha/:/config'
+            - '/etc/localtime:/etc/localtime:ro'
+        networks:
+            - 'ha-fe'
+            - 'mariadb-be'
+            - 'nodered-be'
+            - 'mosquitto-be'
+            - 'deepstack-be'
+        hostname: 'homeassistant'
+        depends_on:
+            - 'ha-mariadb'
+            - 'node-red'
+            - 'mosquitto'
+            - 'zwavejs2mqtt' 
+        ports:
+            - '8123:8123'
+        image: 'homeassistant/home-assistant:${HOMEASSISTANT_VERSION}'
+        restart: 'always'
+        devices:
+            - '/dev/serial/by-id/usb-RFXCOM_RFXtrx433_A1Z58RJC-if00-port0:/dev/ttyUSB0'
+    node-red:
+        ports:
+            - '1880:1880'
+        volumes:
+            - '/home/gert/nodered/:/data'
+            - '/home/gert/images/:/images'
+            - '/home/gert/ha/tmp/:/output'
+        container_name: mynodered
+        hostname: 'nodered'
+        depends_on:
+            - 'mosquitto'
+        networks:
+            - 'nodered-fe'
+            - 'nodered-be'
+            - 'mosquitto-be'
+        image: 'nodered/node-red:${NODERED_VERSION}'
+        restart: 'always'
+    mosquitto:
+        container_name: 'mosquitto'
+        hostname: 'mosquitto'
+        restart: 'always'
+        ports:
+            - '1883:1883'
+            - '9001:9001'
+        volumes:
+            - '/home/gert/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf'
+            - '/home/gert/mosquitto/data/:/mosquitto/data'
+            - '/home/gert/mosquitto/log/:/mosquitto/log'
+        image: 'eclipse-mosquitto:${MOSQUITTO_VERSION}'
+        networks:
+            - 'mosquitto-be'
+            - 'mosquitto-fe'
+        restart: 'always'
+    alpineftp:
+        hostname: "alpineftp"
+        container_name: 'alpineftp'
+        environment:
+            - USERS=one|123456|/home/one|1000
+        ports:
+            - '21:21'
+            - '21000-21010:21000-21010'
+        image: 'delfer/alpine-ftp-server'
+        networks:
+            - 'ftp-fe'
+        volumes:
+            - '/home/gert/images/:/home/one/'
+        restart: 'always'
+    deepstackobject:#        hostname: "deepstackobject"
+#        container_name: "deepstackobject"
+#        environment:
+#            - API-KEY=BfLJ9vKcmJCJCzpio6dZAhLFYYeyJtI8
+#            - VISION-DETECTION=True
+#        ports: 
+#            - '80:5000'
+#        volumes:
+#            - '/home/gert/deepstack/:/datastore'
+#        restart: 'always'
+#        image: 'deepquestai/deepstack'
+#        networks:
+#            - 'deepstack-be'
+    zwavejs2mqtt:
+        container_name: "zwavejs2mqtt"
+        image: zwavejs/zwavejs2mqtt:latest
+        restart: always
+        tty: true
+        stop_signal: SIGINT
+        environment:
+          - TZ=Europe/Amsterdam
+        devices:
+          - '/dev/serial/by-id/usb-0658_0200-if00:/dev/ttyUSB0'
+        networks:
+          - 'zwave-fe'
+        volumes:
+          - /home/gert/zwavejs/store:/usr/src/app/store
+        ports:
+          - '8091:8091'
+          - '3000:3000'
+    frigate:
+        container_name: frigate
+        image: blakeblackshear/frigate:latest
+        restart: always
+        volumes:
+         - /etc/localtime:/etc/localtime
+         - /home/gert/frigate/config.yml:/config/config.yml
+        ports:
+         - 5000:5000
+         - 1935:1935
+        environment:
+         - FRIGATE_RTSP_PASSWORD:'password'
+
+networks:
+  mariadb-be:
+     name: 'MariaDB Backend'
+     driver: 'bridge'
+  bitwarden-fe:
+     name: 'Bitwarden Frontend'
+     driver: 'bridge'
+  ha-fe:
+     name: 'Homeassistant Frondend'
+     driver: 'bridge'
+  nodered-fe:
+     name: 'Nodered Frontend'
+     driver: 'bridge'
+  nodered-be:
+     name: 'Nodered Backend'
+     driver: 'bridge'
+  mosquitto-be:
+     name: 'Mosquitto Backend'
+     driver: 'bridge'
+  mosquitto-fe:
+     name: 'Moquitto Frontend'
+     driver: 'bridge'
+  zwave-fe:
+     name: 'zwavejs Frontend'
+     driver: 'bridge'
+  ftp-fe:
+     name: 'FTP Frontend'
+     driver: 'bridge'
+  deepstack-be:
+     name: 'Deepstack Object detection Beackend'
+     driver: 'bridge'
