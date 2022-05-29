@@ -8,7 +8,7 @@ services:
         environment:
             - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
         networks:
-            - 'mariadb-be'
+            - 'ha-fe'
         image: 'mariadb:${HAMARIADB_VERSION}'
         restart: 'always'
     bitwarden:
@@ -31,7 +31,6 @@ services:
             - '/etc/localtime:/etc/localtime:ro'
         networks:
             - 'ha-fe'
-            - 'mariadb-be'
             - 'nodered-be'
             - 'mosquitto-be'
         hostname: 'homeassistant'
@@ -118,9 +117,6 @@ services:
         restart: always
 
 networks:
-  mariadb-be:
-     name: 'MariaDB Backend'
-     driver: 'bridge'
   bitwarden-fe:
      name: 'Bitwarden Frontend'
      driver: 'bridge'
