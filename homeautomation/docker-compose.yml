@@ -7,6 +7,7 @@ services:
             - '/home/gert/ha-mariadb:/var/lib/mysql'
         environment:
             - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+            - 'MARIADB_USER=${MARIADB_USER}' 
         networks:
             - 'ha-fe'
         image: 'mariadb:${HAMARIADB_VERSION}'
@@ -115,7 +116,16 @@ services:
         volumes: 
          - /var/run/docker.sock:/var/run/docker.sock
         restart: always
-
+    esphome:
+        container_name: esphome
+        image: esphome/esphome
+        privileged: true
+        restart: always
+        ports:
+          - 6052:6052
+        volumes:
+          - /home/gert/esphome:/config:rw
+        network_mode: host
 networks:
   bitwarden-fe:
      name: 'Bitwarden Frontend'
