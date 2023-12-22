@@ -44,8 +44,8 @@ services:
             - '8123:8123'
         image: 'homeassistant/home-assistant:${HOMEASSISTANT_VERSION}'
         restart: 'always'
-        devices:
-            - '/dev/serial/by-id/usb-RFXCOM_RFXtrx433_A1Z58RJC-if00-port0:/dev/ttyUSB0'
+       # devices:
+        #    - '/dev/serial/by-id/usb-RFXCOM_RFXtrx433_A1Z58RJC-if00-port0:/dev/ttyUSB0'
     node-red:
         ports:
             - '1880:1880'
@@ -96,18 +96,18 @@ services:
         ports:
           - '8091:8091'
           - '3000:3000'
-    frigate:
-        container_name: frigate
-        image: blakeblackshear/frigate:stable-amd64
-        restart: always
-        volumes:
-         - /etc/localtime:/etc/localtime
-         - /home/gert/frigate/config.yml:/config/config.yml
-        ports:
-         - 5000:5000
-         - 1935:1935
-        environment:
-         - FRIGATE_RTSP_PASSWORD:'password'
+#    frigate:
+#        container_name: frigate
+#        image: blakeblackshear/frigate:stable-amd64
+#        restart: always
+#        volumes:
+#         - /etc/localtime:/etc/localtime
+#         - /home/gert/frigate/config.yml:/config/config.yml
+#        ports:
+#         - 5000:5000
+#         - 1935:1935
+#        environment:
+#         - FRIGATE_RTSP_PASSWORD:'password'
     portainer:
         container_name: portainer
         image: portainer/portainer-ce:2.9.3
@@ -126,6 +126,9 @@ services:
         volumes:
           - /home/gert/esphome:/config:rw
         network_mode: host
+        devices:
+          - '/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0:/dev/ttyACM0'
+
 networks:
   bitwarden-fe:
      name: 'Bitwarden Frontend'

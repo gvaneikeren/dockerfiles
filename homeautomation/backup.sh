@@ -6,12 +6,12 @@ docker-compose down
 tar -vczf /home/gert/backups/temp/nodered$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/nodered/ 
 tar -vczf /home/gert/backups/temp/bitwarden$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/bitwarden/
 tar -vczf /home/gert/backups/temp/ha$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/ha/
-tar -vczf /home/gert/backups/temp/mosquitto$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/mosquitto/
+#tar -vczf /home/gert/backups/temp/mosquitto$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/mosquitto/
 #tar -vczf /home/gert/backups/temp/ozw$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/ozw/
 #tar -vczf /home/gert/backups/temp/motioneye$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/motioneye/
 tar -vczf /home/gert/backups/temp/ha-mariadb$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/ha-mariadb/
 #tar -vczf /home/gert/backups/temp/dockercompose$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/dockercompose/
-tar -vczf /home/gert/backups/temp/octoprint$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/octoprint/
+#tar -vczf /home/gert/backups/temp/octoprint$(date +%Y-%m-%d-%H-%M).tar.gz /home/gert/octoprint/
 
 #cd /home/gert/dockercompose
 docker-compose up -d
